@@ -1,8 +1,7 @@
 package com.marcel.socialmediaapp;
 
 import android.view.View;
-import android.widget.TextView;
 
-public interface ClickListener {
+public interface ComListener {
     void onPositionClicked(int position);
 }

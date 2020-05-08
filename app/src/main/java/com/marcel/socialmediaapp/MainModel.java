@@ -8,12 +8,12 @@ import io.reactivex.rxjava3.subjects.PublishSubject;
 
 public class MainModel {
 
-    String Nazwa;
-    String Tresc;
-    int Like;
-    int Komentarze;
-    Timestamp Data;
-    String Uzytkownik;
+    private String Nazwa;
+    private String Tresc;
+    private int Like;
+    private int Komentarze;
+    private Timestamp Data;
+    private String Uzytkownik;
 
     public MainModel(){
 

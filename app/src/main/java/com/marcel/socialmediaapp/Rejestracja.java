@@ -44,6 +44,7 @@ public class Rejestracja extends AppCompatActivity {
                     user.updateProfile(profileUpdate);
                     Intent intent= new Intent(Rejestracja.this,MainActivity.class);
                     startActivity(intent);
+                    finish();
                 }
                 else{
                     Log.w("tag", "createUserWithEmail:failure", task.getException());

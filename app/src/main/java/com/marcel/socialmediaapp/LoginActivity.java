@@ -40,6 +40,7 @@ public void login(View view){
                     Toast.makeText(LoginActivity.this, "Hi "+user.getDisplayName(), Toast.LENGTH_SHORT).show();
                     Intent intent=new Intent(LoginActivity.this,MainActivity.class);
                     startActivity(intent);
+                    finish();
                     Toast.makeText(LoginActivity.this, "Zalogowano", Toast.LENGTH_SHORT).show();
                 }else{
                     Log.w("tag", "createUserWithEmail:failure", task.getException());

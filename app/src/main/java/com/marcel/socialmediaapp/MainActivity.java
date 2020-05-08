@@ -39,7 +39,9 @@ public class MainActivity extends AppCompatActivity  {
     FirebaseUser currentUser;
     ArrayList<String>id=new ArrayList<>();
     boolean check = false;
-    String idlike="";
+    boolean comm=false;
+    int nr;
+    String saveId="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,44 +50,54 @@ public class MainActivity extends AppCompatActivity  {
         setContentView(view);
         mAuth = FirebaseAuth.getInstance();
         binding.wyloguj.setOnClickListener(this::wylog);
-
+        binding.imageButton.setOnClickListener(this::userListButton);
         LinearLayoutManager layoutManager =new LinearLayoutManager(MainActivity.this,LinearLayoutManager.VERTICAL,false);
         binding.Recycler.setLayoutManager(layoutManager);
         binding.Recycler.setItemAnimator(new DefaultItemAnimator());
-         mainAdapter=new MainAdapter(MainActivity.this, lista, position -> {
-             GetPostData getPostData =new GetPostData();
+         mainAdapter=new MainAdapter(MainActivity.this, lista, (position) -> {
+             GetPostData getPostData = new GetPostData();
              FirebaseFirestore db = FirebaseFirestore.getInstance();
-             DocumentReference documentReference=db.collection("Posty").document(id.get(position));
-             getPostData.check_like((a,b) -> {
-                 check=a;
-                 //idlike=b;
-                 if(check==false){
-                     Log.i("id",id.get(position));
-                     documentReference.update("like",lista.get(position).getLike()+1).addOnSuccessListener(aVoid -> {
-                         //Log.i("Like","done");
-                         mainAdapter.notifyItemChanged(position);
-                         //check=true;
-                     });
-                     Log.i("Like1","done");
-                     mainAdapter.mainModels.get(position).setLike(lista.get(position).getLike()+1);
-                     db.collection("Posty").document(id.get(position)).collection("like").document(currentUser.getUid()).set(new HashMap<String, Object>()).addOnCompleteListener(task -> {
-                         Log.i("blad", String.valueOf(task.getException()));
-                     });
+             DocumentReference documentReference = db.collection("Posty").document(id.get(position));
+             nr=position;
 
-                 }if(check==true){
-                     Log.i("id",id.get(position));
-                     documentReference.update("like",lista.get(position).getLike()-1).addOnSuccessListener(aVoid -> {
-                         //Log.i("Like","done");
-                         mainAdapter.notifyItemChanged(position);
-                     });
-                     mainAdapter.mainModels.get(position).setLike(lista.get(position).getLike()-1);
-                     db.collection("Posty").document(id.get(position)).collection("like").document(currentUser.getUid()).delete();
-                     //check=false;
-                 }
-             },id.get(position));
+                 getPostData.check_like((a, b) -> {
+                     check = a;
+                     //idlike=b;
+                     if (check == false) {
+                         Log.i("id", id.get(position));
+                         documentReference.update("like", lista.get(position).getLike() + 1).addOnSuccessListener(aVoid -> {
+                             //Log.i("Like","done");
+                             mainAdapter.notifyItemChanged(position);
+                             //check=true;
+                         });
+                         Log.i("Like1", "done");
+                         mainAdapter.mainModels.get(position).setLike(lista.get(position).getLike() + 1);
+                         db.collection("Posty").document(id.get(position)).collection("like").document(currentUser.getUid()).set(new HashMap<String, Object>()).addOnCompleteListener(task -> {
+                             Log.i("blad", String.valueOf(task.getException()));
+                         });
+
+                     }
+                     if (check == true) {
+                         Log.i("id", id.get(position));
+                         documentReference.update("like", lista.get(position).getLike() - 1).addOnSuccessListener(aVoid -> {
+                             //Log.i("Like","done");
+                             mainAdapter.notifyItemChanged(position);
+                         });
+                         mainAdapter.mainModels.get(position).setLike(lista.get(position).getLike() - 1);
+                         db.collection("Posty").document(id.get(position)).collection("like").document(currentUser.getUid()).delete();
+                         //check=false;
+                     }
+                 }, id.get(position));
 
 
 
+
+         },comListener->{
+             CommentDialog commentDialog=new CommentDialog();
+             commentDialog.sendData(id.get(comListener));
+             commentDialog.show(getSupportFragmentManager(),null);
+             commentDialog.updateData();
+             //saveId=id.get(comListener);
          });
         binding.Recycler.setAdapter(mainAdapter);
         GetPostData getPostData=new GetPostData();
@@ -98,12 +110,16 @@ public class MainActivity extends AppCompatActivity  {
         });
         binding.buttonUpload.setOnClickListener(this::sendPost);
     }
+
+
+
     public void sendPost(View view){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         MainModel mainModel = new MainModel();
         mainModel.setNazwa(currentUser.getDisplayName());
         mainModel.setUzytkownik(currentUser.getUid());
         mainModel.setTresc(binding.editTextPost.getText().toString());
+        binding.editTextPost.setText("");
         Date todayDate = Calendar.getInstance().getTime();
         Timestamp timestamp= new Timestamp(todayDate);
         mainModel.setData(timestamp);
@@ -123,6 +139,10 @@ public class MainActivity extends AppCompatActivity  {
         });
 
     }
+    public void userListButton(View view){
+        Intent intent = new Intent(MainActivity.this,ContactActivity.class);
+        startActivity(intent);
+    }
     public void wylog(View view){
         mAuth.signOut();
         Intent intent = new Intent(MainActivity.this,LoginActivity.class);
@@ -135,6 +155,7 @@ public class MainActivity extends AppCompatActivity  {
         if(currentUser==null){
             Intent intent = new Intent(MainActivity.this,LoginActivity.class);
             startActivity(intent);
+            finish();
         }else {
 
         }
