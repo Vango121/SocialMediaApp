@@ -17,10 +17,11 @@ public class UserManagment {
     int checkMessageUser(MessageModel messageModel,String userID){
 
         if(currentUser.getUid().equals(messageModel.getRecieverUID())&&userID.equals(messageModel.getSenderUID())){
-            Log.i("msg","reciever"+currentUser.getUid());
+            Log.i("msg","reciever"+currentUser.getUid()+" "+messageModel.getWiadomosc());
             return RECIEVER;
-        }if(currentUser.getUid().equals(messageModel.getSenderUID())&&userID.equals(messageModel.getRecieverUID())){
-            Log.i("msg","sender"+currentUser.getUid());
+        }
+        if(currentUser.getUid().equals(messageModel.getSenderUID())&&userID.equals(messageModel.getRecieverUID())){
+            Log.i("msg","sender"+currentUser.getUid()+" "+messageModel.getWiadomosc());
             return SENDER;
         }
         Log.i("msg","null");

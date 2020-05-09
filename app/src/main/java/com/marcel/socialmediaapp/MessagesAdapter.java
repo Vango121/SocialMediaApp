@@ -17,8 +17,18 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private ArrayList<MessageModel> messageModels;
     private Context context;
     private String userID;
+    private String name;
+    private String senderName;
 
-    public MessagesAdapter(ArrayList<MessageModel> messageModels,Context context,String userID) {
+    public MessagesAdapter(ArrayList<MessageModel> messageModels, Context context, String userID, String name, String senderName) {
+        this.messageModels = messageModels;
+        this.context = context;
+        this.userID = userID;
+        this.name = name;
+        this.senderName=senderName;
+    }
+
+    public MessagesAdapter(ArrayList<MessageModel> messageModels, Context context, String userID) {
         this.messageModels = messageModels;
         this.context=context;
         this.userID=userID;
@@ -67,6 +77,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public int getItemViewType(int position) {
         UserManagment userManagment= new UserManagment();
         int result=userManagment.checkMessageUser(messageModels.get(position),userID);
+        if(result==0){
+            messageModels.get(position).setNazwa(name);
+            Log.i("nazwa",name);
+        }else if(result==1){
+            messageModels.get(position).setNazwa(senderName);
+            Log.i("nazwa",senderName);
+        }
+        Log.i("result",result+"");
         return result;
     }
 

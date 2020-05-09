@@ -8,7 +8,9 @@ public class MessageModel {
     private String RecieverUID;
     private String wiadomosc;
     private Timestamp Data;
+    public MessageModel(){
 
+    }
     public MessageModel(String nazwa, String senderUID, String recieverUID, String wiadomosc, Timestamp data) {
         Nazwa = nazwa;
         SenderUID = senderUID;
